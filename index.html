@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>go viral</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#4fc3f7;--blue2:#0288d1;--blue3:#81d4fa;--dark:#0a0e17;--dark2:#111827;
+  --card:#0d1525;--card2:#131d33;--border:rgba(79,195,247,.15);--glow:rgba(79,195,247,.3);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:#e0e8f0;overflow-x:hidden}
+
+/* Animated background */
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(79,195,247,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(79,195,247,.03) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+.bg-orb{position:fixed;border-radius:50%;filter:blur(120px);opacity:.12;z-index:0;pointer-events:none;animation:orbFloat 20s ease-in-out infinite}
+.bg-orb.o1{width:600px;height:600px;background:var(--blue);top:-200px;left:-100px}
+.bg-orb.o2{width:500px;height:500px;background:var(--blue2);bottom:-150px;right:-100px;animation-delay:-10s}
+.bg-orb.o3{width:400px;height:400px;background:var(--blue3);top:50%;left:50%;animation-delay:-5s}
+@keyframes orbFloat{0%,100%{transform:translate(0,0)}25%{transform:translate(30px,-40px)}50%{transform:translate(-20px,30px)}75%{transform:translate(40px,20px)}}
+
+/* Particles */
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.particle{position:absolute;width:3px;height:3px;background:var(--blue);border-radius:50%;opacity:0;animation:particleRise linear infinite}
+@keyframes particleRise{0%{opacity:0;transform:translateY(100vh) scale(0)}10%{opacity:.6}90%{opacity:.6}100%{opacity:0;transform:translateY(-10vh) scale(1)}}
+
+/* Navigation */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;
+  backdrop-filter:blur(20px);background:rgba(10,14,23,.7);border-bottom:1px solid var(--border);transition:all .3s}
+nav.scrolled{padding:10px 40px;background:rgba(10,14,23,.9)}
+.nav-logo{display:flex;align-items:center;gap:12px}
+.nav-logo img{width:40px;height:40px;border-radius:12px;border:2px solid var(--blue);box-shadow:0 0 15px var(--glow)}
+.nav-logo span{font-weight:800;font-size:20px;background:linear-gradient(135deg,var(--blue),var(--blue3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:32px}
+.nav-links a{color:#8899aa;text-decoration:none;font-weight:500;font-size:14px;transition:all .3s;position:relative}
+.nav-links a:hover{color:var(--blue)}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--blue);transition:width .3s}
+.nav-links a:hover::after{width:100%}
+
+/* Hero */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 20px 80px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:100px;background:rgba(79,195,247,.08);border:1px solid var(--border);font-size:13px;color:var(--blue3);margin-bottom:24px;animation:fadeUp .8s ease}
+.hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 var(--glow)}50%{opacity:.7;box-shadow:0 0 0 8px transparent}}
+.hero-pfp{width:120px;height:120px;border-radius:28px;border:3px solid var(--blue);box-shadow:0 0 40px var(--glow),0 20px 60px rgba(0,0,0,.4);margin-bottom:32px;animation:fadeUp .8s ease .1s both;transition:transform .3s}
+.hero-pfp:hover{transform:scale(1.05) rotate(2deg)}
+.hero h1{font-size:clamp(48px,8vw,96px);font-weight:900;line-height:1;margin-bottom:16px;animation:fadeUp .8s ease .2s both}
+.hero h1 .gradient{background:linear-gradient(135deg,var(--blue),#e0f7fa,var(--blue2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:shimmer 3s ease infinite}
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero p{font-size:18px;color:#7a8fa0;max-width:500px;margin:0 auto 40px;animation:fadeUp .8s ease .3s both}
+
+/* Stats bar */
+.stats-bar{display:flex;gap:40px;animation:fadeUp .8s ease .4s both}
+.stat{text-align:center}
+.stat-num{font-size:32px;font-weight:800;color:var(--blue);display:block}
+.stat-label{font-size:12px;color:#5a6a7a;text-transform:uppercase;letter-spacing:2px;margin-top:4px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* Section headers */
+.section{position:relative;z-index:1;padding:100px 40px;max-width:1300px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:60px}
+.section-tag{display:inline-block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--blue);margin-bottom:12px;
+  padding:6px 16px;background:rgba(79,195,247,.06);border:1px solid var(--border);border-radius:100px}
+.section-title{font-size:clamp(32px,5vw,48px);font-weight:800}
+.section-title .accent{color:var(--blue)}
+
+/* Games grid */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+.game-card{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:all .4s cubic-bezier(.175,.885,.32,1.1);cursor:pointer;position:relative}
+.game-card::before{content:'';position:absolute;inset:0;border-radius:20px;background:linear-gradient(135deg,rgba(79,195,247,.1),transparent);opacity:0;transition:opacity .3s;z-index:1;pointer-events:none}
+.game-card:hover{transform:translateY(-8px);border-color:rgba(79,195,247,.4);box-shadow:0 20px 60px rgba(0,0,0,.3),0 0 30px rgba(79,195,247,.1)}
+.game-card:hover::before{opacity:1}
+.game-thumb-wrap{position:relative;aspect-ratio:16/9;overflow:hidden}
+.game-thumb{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.game-card:hover .game-thumb{transform:scale(1.08)}
+.game-thumb-overlay{position:absolute;inset:0;background:linear-gradient(transparent 50%,rgba(10,14,23,.8));z-index:1}
+.game-ccu{position:absolute;top:12px;right:12px;z-index:2;display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;background:rgba(10,14,23,.7);backdrop-filter:blur(10px);border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--blue3)}
+.game-ccu .live-dot{width:6px;height:6px;border-radius:50%;background:#4caf50;animation:pulse 2s ease infinite}
+.game-info{padding:20px;position:relative;z-index:2}
+.game-name{font-size:16px;font-weight:700;margin-bottom:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.game-stats{display:flex;gap:16px;flex-wrap:wrap}
+.game-stat{display:flex;align-items:center;gap:6px;font-size:13px;color:#7a8fa0}
+.game-stat svg{width:14px;height:14px;flex-shrink:0}
+.game-stat .val{color:#c0d0e0;font-weight:600}
+.like-bar{width:100%;height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:12px;overflow:hidden}
+.like-fill{height:100%;border-radius:2px;transition:width 1.5s ease}
+
+/* Team */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:28px}
+.team-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:36px;display:flex;flex-direction:column;align-items:center;text-align:center;transition:all .4s;position:relative;overflow:hidden}
+.team-card::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:80%;height:1px;background:linear-gradient(90deg,transparent,var(--blue),transparent)}
+.team-card:hover{transform:translateY(-6px);border-color:rgba(79,195,247,.3);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.team-pfp-wrap{position:relative;margin-bottom:20px}
+.team-pfp{width:100px;height:100px;border-radius:50%;border:3px solid var(--blue);box-shadow:0 0 30px var(--glow);transition:transform .3s;object-fit:cover}
+.team-card:hover .team-pfp{transform:scale(1.08)}
+.team-pfp-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid transparent;border-top-color:var(--blue);animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.team-name{font-size:22px;font-weight:800;margin-bottom:4px}
+.team-role{font-size:13px;color:var(--blue);font-weight:600;margin-bottom:6px}
+.team-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:20px}
+.team-tag{font-size:11px;padding:4px 10px;border-radius:100px;background:rgba(79,195,247,.08);border:1px solid var(--border);color:#8899aa}
+.team-socials{display:flex;gap:12px}
+.team-social{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:rgba(79,195,247,.06);border:1px solid var(--border);transition:all .3s;color:#7a8fa0;text-decoration:none}
+.team-social:hover{background:rgba(79,195,247,.15);border-color:var(--blue);color:var(--blue);transform:translateY(-2px)}
+.team-social svg{width:18px;height:18px}
+
+/* Groups */
+.groups-scroll{display:flex;gap:24px;overflow-x:auto;padding-bottom:20px;scrollbar-width:thin;scrollbar-color:var(--blue) transparent;scroll-snap-type:x mandatory}
+.groups-scroll::-webkit-scrollbar{height:6px}
+.groups-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.03);border-radius:3px}
+.groups-scroll::-webkit-scrollbar-thumb{background:var(--blue);border-radius:3px}
+.group-card{flex-shrink:0;width:260px;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:all .4s cubic-bezier(.175,.885,.32,1.1);cursor:pointer;position:relative;scroll-snap-align:start}
+.group-card::before{content:'';position:absolute;inset:0;border-radius:20px;background:linear-gradient(135deg,rgba(79,195,247,.1),transparent);opacity:0;transition:opacity .3s;z-index:1;pointer-events:none}
+.group-card:hover{transform:translateY(-8px);border-color:rgba(79,195,247,.4);box-shadow:0 20px 60px rgba(0,0,0,.3),0 0 30px rgba(79,195,247,.1)}
+.group-card:hover::before{opacity:1}
+.group-thumb-wrap{position:relative;aspect-ratio:1/1;overflow:hidden}
+.group-thumb{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.group-card:hover .group-thumb{transform:scale(1.08)}
+.group-thumb-overlay{position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(10,14,23,.9));z-index:1}
+.group-info{padding:16px 20px;position:relative;z-index:2}
+.group-name{font-size:15px;font-weight:700;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.group-members{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--blue)}
+.group-members svg{width:14px;height:14px}
+
+/* Footer */
+footer{position:relative;z-index:1;text-align:center;padding:60px 20px;border-top:1px solid var(--border)}
+footer p{color:#4a5a6a;font-size:13px}
+footer .brand{color:var(--blue);font-weight:700}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.175,.885,.32,1.275)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* Responsive */
+@media(max-width:768px){
+  nav{padding:12px 20px}
+  .nav-links{display:none}
+  .section{padding:60px 20px}
+  .stats-bar{flex-wrap:wrap;gap:24px}
+  .team-grid{grid-template-columns:1fr}
+  .games-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orb o1"></div>
+<div class="bg-orb o2"></div>
+<div class="bg-orb o3"></div>
+<div class="particles" id="particles"></div>
+
+<nav id="nav">
+  <div class="nav-logo">
+    <img src="https://tr.rbxcdn.com/180DAY-0d37f5c42b1bf2a18d2b2515fe5afc3f/512/512/Image/Webp/noFilter" alt="Go Viral">
+    <span>go viral</span>
+  </div>
+  <div class="nav-links">
+    <a href="#games">Games</a>
+    <a href="#team">Team</a>
+    <a href="#groups">Groups</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> Roblox Development Studio</div>
+  <img class="hero-pfp" src="https://tr.rbxcdn.com/180DAY-0d37f5c42b1bf2a18d2b2515fe5afc3f/512/512/Image/Webp/noFilter" alt="Go Viral">
+  <h1><span class="gradient">go viral</span></h1>
+  <p>building viral roblox experiences with millions of players worldwide</p>
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-num" data-count="24810326">0</span><span class="stat-label">Total Visits</span></div>
+    <div class="stat"><span class="stat-num" data-count="14">0</span><span class="stat-label">Games</span></div>
+    <div class="stat"><span class="stat-num" data-count="11">0</span><span class="stat-label">Groups</span></div>
+    <div class="stat"><span class="stat-num" data-count="760258">0</span><span class="stat-label">Members</span></div>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section class="section" id="games">
+  <div class="section-header reveal">
+    <div class="section-tag">portfolio</div>
+    <h2 class="section-title">our <span class="accent">games</span></h2>
+  </div>
+  <div class="games-grid" id="gamesGrid"></div>
+</section>
+
+<!-- TEAM -->
+<section class="section" id="team">
+  <div class="section-header reveal">
+    <div class="section-tag">the crew</div>
+    <h2 class="section-title">meet the <span class="accent">team</span></h2>
+  </div>
+  <div class="team-grid" id="teamGrid"></div>
+</section>
+
+<!-- GROUPS -->
+<section class="section" id="groups">
+  <div class="section-header reveal">
+    <div class="section-tag">network</div>
+    <h2 class="section-title">our <span class="accent">groups</span></h2>
+  </div>
+  <div class="groups-scroll reveal" id="groupsScroll"></div>
+</section>
+
+<footer>
+  <p><span class="brand">go viral</span> | crafting viral roblox experiences</p>
+</footer>
+
+<script>
+// === DATA ===
+const games = [
+  {id:8603504974,name:"GAG Trading Hub",visits:22863573,up:39670,down:1089,thumb:"https://tr.rbxcdn.com/180DAY-d6e9ca317fac3bbd1015ebc9efe90286/512/512/Image/Png/noFilter",place:104179373806852},
+  {id:9293289881,name:"Spell or Die",visits:1042112,up:961,down:308,thumb:"https://tr.rbxcdn.com/180DAY-7b81819ced08631fa3cbb849388bb4a4/512/512/Image/Png/noFilter",place:77319744369076},
+  {id:9598201195,name:"Break Lucky Block for Bubu",visits:648894,up:23,down:41,thumb:"https://tr.rbxcdn.com/180DAY-c56e5f5abc2932535a24da13c7f570c1/512/512/Image/Png/noFilter",place:78274016400613},
+  {id:9729873889,name:"BLOW OFF",visits:159643,up:339,down:42,thumb:"https://tr.rbxcdn.com/180DAY-3412625ff60012f56708c9d311cad393/512/512/Image/Png/noFilter",place:91629593999749},
+  {id:7143642530,name:"Mind Test",visits:45270,up:39,down:38,thumb:"https://tr.rbxcdn.com/180DAY-24f43297606267e517496ff9e49ec3cf/512/512/Image/Png/noFilter",place:116595275577700},
+  {id:6463381140,name:"Bomb Pass 1v1",visits:24029,up:62,down:41,thumb:"https://tr.rbxcdn.com/180DAY-8759828683a10ac06b2848f7501133b0/512/512/Image/Png/noFilter",place:82973035487520},
+  {id:9071953397,name:"Brainrot Battles",visits:17944,up:32,down:13,thumb:"https://tr.rbxcdn.com/180DAY-87d83830529a11a7c9be9a07d877a64e/512/512/Image/Png/noFilter",place:117083471366915},
+  {id:7387528481,name:"Climb Tower For ADMIN",visits:15005,up:105,down:28,thumb:"https://tr.rbxcdn.com/180DAY-7a0c1676c3671a570fdc64aa14255842/512/512/Image/Png/noFilter",place:111645173186762},
+  {id:7009564001,name:"Be a Cannon",visits:6308,up:57,down:11,thumb:"https://tr.rbxcdn.com/180DAY-40abcd63332bde4b3a4a53b0bd307a7c/512/512/Image/Png/noFilter",place:134273125021994},
+  {id:8348390787,name:"Poison Drinks",visits:1689,up:13,down:5,thumb:"https://tr.rbxcdn.com/180DAY-f62bca36d371280ae0722886e3b6d446/512/512/Image/Png/noFilter",place:81784154599299},
+  {id:7415515072,name:"Slippery Steps",visits:494,up:6,down:5,thumb:"https://tr.rbxcdn.com/180DAY-2b14b03e5520b35e5c1c0180daad378a/512/512/Image/Png/noFilter",place:108279858583973},
+  {id:7311166728,name:"Rusty Rails",visits:316,up:6,down:2,thumb:"https://tr.rbxcdn.com/180DAY-91cef8e237b4af062db35c4d87f0e66c/512/512/Image/Png/noFilter",place:96353896267005},
+  {id:7810161766,name:"stupid islands",visits:272,up:6,down:1,thumb:"https://tr.rbxcdn.com/180DAY-464a73a5289e9bde2529f674704f81db/512/512/Image/Png/noFilter",place:135489750610068},
+  {id:8552502376,name:"Build Brainrots",visits:251,up:13,down:1,thumb:"https://tr.rbxcdn.com/180DAY-d789347e5fbadbc4e9674e5d7a32bc5d/512/512/Image/Png/noFilter",place:123463454428500},
+];
+
+const team = [
+  {name:"django",role:"Founder",tags:["UI","Ideas","Thumbnails","Analytics","Retard"],pfp:"https://cdn.discordapp.com/avatars/826689353626550272/720b7dff45726a6ba4635dfd92c639d6.webp",
+   socials:[{type:"discord",id:"826689353626550272"},{type:"guns",url:"https://guns.lol/django_"}]},
+  {name:"xeptic",role:"Co-Founder",tags:["Scripter"],pfp:"https://cdn.discordapp.com/avatars/1273561574321160195/8e31ec0e783e863fde6781813440b166.webp",
+   socials:[{type:"discord",id:"1273561574321160195"},{type:"guns",url:"https://guns.lol/xeptic"}]},
+  {name:"dotvur",role:"Scripter",tags:["Scripter"],pfp:"https://cdn.discordapp.com/avatars/928342355378053171/4857a840f9817a76b55a9c7fbc6fc975.webp",
+   socials:[{type:"discord",id:"928342355378053171"}]},
+];
+
+const groups = [
+  {name:"go_viraI",members:363011,id:35345512,thumb:"https://tr.rbxcdn.com/180DAY-0d37f5c42b1bf2a18d2b2515fe5afc3f/420/420/Image/Png/noFilter"},
+  {name:"Grow a Garden Traders",members:312828,id:302128727,thumb:"https://tr.rbxcdn.com/180DAY-f925daad7cd7b35d0d0969044aba8e55/420/420/Image/Png/noFilter"},
+  {name:"_type",members:61361,id:826149752,thumb:"https://tr.rbxcdn.com/180DAY-8551f4d2fa3e51c7cc47c8ac02dd1be7/420/420/Image/Png/noFilter"},
+  {name:"UR. Studios",members:22613,id:34840214,thumb:"https://tr.rbxcdn.com/180DAY-67fe16610ad15177e25129355736a155/420/420/Image/Png/noFilter"},
+  {name:"dont fart on me",members:248,id:820128683,thumb:"https://tr.rbxcdn.com/180DAY-b16ca9f2409600590c3e2c4ec3ef2537/420/420/Image/Png/noFilter"},
+  {name:"luckiest kids on the planet",members:98,id:214611251,thumb:"https://tr.rbxcdn.com/180DAY-894bcea9cbe04e74e0c9ed372893c7e2/420/420/Image/Png/noFilter"},
+  {name:"LIRILI ROLLILA",members:54,id:266916387,thumb:"https://tr.rbxcdn.com/180DAY-8bb401a0eb27340b08ddc9d1093f2a55/420/420/Image/Png/noFilter"},
+  {name:"poison party",members:22,id:1069211631,thumb:"https://tr.rbxcdn.com/180DAY-9f90d44602c3e033ff9e10c1c921ce88/420/420/Image/Png/noFilter"},
+  {name:"da' crash",members:9,id:289597578,thumb:"https://tr.rbxcdn.com/180DAY-e8e9070e30da9debc1477fcc758357f0/420/420/Image/Png/noFilter"},
+  {name:"slapping kings",members:6,id:785684449,thumb:"https://tr.rbxcdn.com/180DAY-2977ebf74f391a05d3dfa4fb85eddabb/420/420/Image/Png/noFilter"},
+  {name:"how bad can i possibly be",members:4,id:43412709,thumb:"https://tr.rbxcdn.com/180DAY-09ef716b005ce456b1ca4f629d951533/420/420/Image/Png/noFilter"},
+];
+
+// === SVG ICONS ===
+const icons = {
+  eye: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+  thumb: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>`,
+  discord: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>`,
+  gun: `<svg viewBox="0 0 24 24" fill="currentColor" style="transform:rotate(-45deg)"><path d="M21 3h-8a1 1 0 0 0-1 1v3H7a1 1 0 0 0-1 1v2H3a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2h4v3a1 1 0 0 0 1 1h1a1 1 0 0 0 .707-.293l3-3A1 1 0 0 0 18 16v-2h3a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm-1 10h-3a1 1 0 0 0-1 1v2.586L14.586 18H14v-4a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v2H5v-2a1 1 0 0 0-1-1H4v-2h3a1 1 0 0 0 1-1V9h5a1 1 0 0 0 1-1V5h6v8z"/><circle cx="18" cy="8" r="1"/></svg>`,
+  users: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+};
+
+// === FORMAT ===
+function fmt(n){if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e3)return(n/1e3).toFixed(1)+"K";return n.toString()}
+
+// === RENDER GAMES ===
+const gamesGrid = document.getElementById("gamesGrid");
+games.forEach((g,i)=>{
+  const likeRatio = Math.round(g.up/(g.up+g.down)*100);
+  const color = likeRatio >= 80 ? "#4caf50" : likeRatio >= 60 ? "#ff9800" : "#f44336";
+  const card = document.createElement("div");
+  card.className = "game-card reveal";
+  card.style.transitionDelay = `${i*0.06}s`;
+  card.onclick = () => window.open(`https://www.roblox.com/games/${g.place}`, '_blank');
+  card.innerHTML = `
+    <div class="game-thumb-wrap">
+      <img class="game-thumb" src="${g.thumb}" alt="${g.name}" loading="lazy">
+      <div class="game-thumb-overlay"></div>
+      <div class="game-ccu"><span class="live-dot"></span>Live</div>
+    </div>
+    <div class="game-info">
+      <div class="game-name">${g.name}</div>
+      <div class="game-stats">
+        <div class="game-stat">${icons.eye}<span class="val">${fmt(g.visits)}</span></div>
+        <div class="game-stat">${icons.thumb}<span class="val" style="color:${color}">${likeRatio}%</span></div>
+      </div>
+      <div class="like-bar"><div class="like-fill" style="width:${likeRatio}%;background:${color}"></div></div>
+    </div>`;
+  gamesGrid.appendChild(card);
+});
+
+// === RENDER TEAM ===
+const teamGrid = document.getElementById("teamGrid");
+team.forEach((t,i)=>{
+  const card = document.createElement("div");
+  card.className = "team-card reveal";
+  card.style.transitionDelay = `${i*0.1}s`;
+  let socialsHTML = "";
+  t.socials.forEach(s=>{
+    if(s.type==="discord"){
+      socialsHTML += `<a class="team-social" href="https://discord.com/users/${s.id}" target="_blank" title="Discord">${icons.discord}</a>`;
+    } else if(s.type==="guns"){
+      socialsHTML += `<a class="team-social" href="${s.url}" target="_blank" title="guns.lol">${icons.gun}</a>`;
+    }
+  });
+  card.innerHTML = `
+    <div class="team-pfp-wrap">
+      <img class="team-pfp" src="${t.pfp}" alt="${t.name}">
+      <div class="team-pfp-ring"></div>
+    </div>
+    <div class="team-name">${t.name}</div>
+    <div class="team-role">${t.role}</div>
+    <div class="team-tags">${t.tags.map(tag=>`<span class="team-tag">${tag}</span>`).join("")}</div>
+    <div class="team-socials">${socialsHTML}</div>`;
+  teamGrid.appendChild(card);
+});
+
+// === RENDER GROUPS ===
+const groupsScroll = document.getElementById("groupsScroll");
+groups.forEach(g=>{
+  const card = document.createElement("div");
+  card.className = "group-card";
+  card.onclick = () => window.open(`https://www.roblox.com/groups/${g.id}`, '_blank');
+  card.innerHTML = `
+    <div class="group-thumb-wrap">
+      <img class="group-thumb" src="${g.thumb}" alt="${g.name}" loading="lazy">
+      <div class="group-thumb-overlay"></div>
+    </div>
+    <div class="group-info">
+      <div class="group-name">${g.name}</div>
+      <div class="group-members">${icons.users} ${fmt(g.members)} members</div>
+    </div>`;
+  groupsScroll.appendChild(card);
+});
+
+// === PARTICLES ===
+const particlesEl = document.getElementById("particles");
+for(let i=0;i<30;i++){
+  const p = document.createElement("div");
+  p.className = "particle";
+  p.style.left = Math.random()*100+"%";
+  p.style.animationDuration = (8+Math.random()*12)+"s";
+  p.style.animationDelay = Math.random()*15+"s";
+  p.style.width = p.style.height = (2+Math.random()*3)+"px";
+  particlesEl.appendChild(p);
+}
+
+// === COUNTER ANIMATION ===
+function animateCounters(){
+  document.querySelectorAll(".stat-num[data-count]").forEach(el=>{
+    const target = parseInt(el.dataset.count);
+    const duration = 2000;
+    const start = performance.now();
+    function tick(now){
+      const progress = Math.min((now-start)/duration,1);
+      const eased = 1-Math.pow(1-progress,3);
+      el.textContent = fmt(Math.round(target*eased));
+      if(progress<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+// === SCROLL REVEAL ===
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("visible");observer.unobserve(e.target)}});
+},{threshold:0.1});
+document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+
+// === NAV SCROLL ===
+window.addEventListener("scroll",()=>{
+  document.getElementById("nav").classList.toggle("scrolled",window.scrollY>50);
+});
+
+// === START COUNTERS WHEN HERO VISIBLE ===
+const heroObs = new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting){animateCounters();heroObs.disconnect()}
+},{threshold:0.3});
+heroObs.observe(document.querySelector(".hero"));
+</script>
+</body>
+</html>
