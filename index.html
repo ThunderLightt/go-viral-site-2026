@@ -80,8 +80,12 @@ nav.scrolled{padding:10px 40px;background:rgba(10,14,23,.9)}
 .game-card::before{content:'';position:absolute;inset:0;border-radius:20px;background:linear-gradient(135deg,rgba(79,195,247,.1),transparent);opacity:0;transition:opacity .3s;z-index:1;pointer-events:none}
 .game-card:hover{transform:translateY(-8px);border-color:rgba(79,195,247,.4);box-shadow:0 20px 60px rgba(0,0,0,.3),0 0 30px rgba(79,195,247,.1)}
 .game-card:hover::before{opacity:1}
+.game-card.highlighted{border:3px solid #fdd835;box-shadow:0 0 20px rgba(253,216,53,.25)}
+.game-card.highlighted::before{background:linear-gradient(to top,rgba(253,216,53,.18),transparent 60%);opacity:1}
+.game-card.highlighted:hover{border-color:#ffeb3b;box-shadow:0 20px 60px rgba(0,0,0,.3),0 0 35px rgba(253,216,53,.3)}
+.game-card.highlighted:hover::before{background:linear-gradient(to top,rgba(253,216,53,.28),transparent 70%)}
 .game-thumb-wrap{position:relative;aspect-ratio:16/9;overflow:hidden}
-.game-thumb{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.game-thumb{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .5s}
 .game-card:hover .game-thumb{transform:scale(1.08)}
 .game-thumb-overlay{position:absolute;inset:0;background:linear-gradient(transparent 50%,rgba(10,14,23,.8));z-index:1}
 .game-ccu{position:absolute;top:12px;right:12px;z-index:2;display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;background:rgba(10,14,23,.7);backdrop-filter:blur(10px);border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--blue3)}
@@ -218,6 +222,9 @@ footer .brand{color:var(--blue);font-weight:700}
 </footer>
 
 <script>
+// === HIGHLIGHTED ===
+const highlightedUniverses = [9768959975];
+
 // === DATA ===
 const games = [
   {id:8603504974,name:"GAG Trading Hub",visits:22863573,up:39670,down:1089,thumb:"https://tr.rbxcdn.com/180DAY-d6e9ca317fac3bbd1015ebc9efe90286/512/512/Image/Png/noFilter",place:104179373806852},
@@ -234,6 +241,7 @@ const games = [
   {id:7311166728,name:"Rusty Rails",visits:316,up:6,down:2,thumb:"https://tr.rbxcdn.com/180DAY-91cef8e237b4af062db35c4d87f0e66c/512/512/Image/Png/noFilter",place:96353896267005},
   {id:7810161766,name:"stupid islands",visits:272,up:6,down:1,thumb:"https://tr.rbxcdn.com/180DAY-464a73a5289e9bde2529f674704f81db/512/512/Image/Png/noFilter",place:135489750610068},
   {id:8552502376,name:"Build Brainrots",visits:251,up:13,down:1,thumb:"https://tr.rbxcdn.com/180DAY-d789347e5fbadbc4e9674e5d7a32bc5d/512/512/Image/Png/noFilter",place:123463454428500},
+  {id:9768959975,name:"Defend your Raft",visits:1065,up:8,down:11,thumb:"https://tr.rbxcdn.com/180DAY-fa5accd82e1c1edb21db2d2c2a2de0df/512/512/Image/Png/noFilter",place:109065865682464},
 ];
 
 const team = [
@@ -273,11 +281,12 @@ function fmt(n){if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e3)return(n/1e3).t
 
 // === RENDER GAMES ===
 const gamesGrid = document.getElementById("gamesGrid");
+games.sort((a,b) => highlightedUniverses.includes(b.id) - highlightedUniverses.includes(a.id));
 games.forEach((g,i)=>{
   const likeRatio = Math.round(g.up/(g.up+g.down)*100);
   const color = likeRatio >= 80 ? "#4caf50" : likeRatio >= 60 ? "#ff9800" : "#f44336";
   const card = document.createElement("div");
-  card.className = "game-card reveal";
+  card.className = "game-card reveal" + (highlightedUniverses.includes(g.id) ? " highlighted" : "");
   card.style.transitionDelay = `${i*0.06}s`;
   card.onclick = () => window.open(`https://www.roblox.com/games/${g.place}`, '_blank');
   card.innerHTML = `
